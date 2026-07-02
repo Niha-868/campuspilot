@@ -121,6 +121,22 @@ Generic placement tools won't model the **Indian campus hiring pattern**. Campus
         ↓
 6. Dashboard: Tracker updates severity map → shows recommended next session
 ```
+---
+## 📸 Screenshots
+
+### Dashboard — Tracker Agent in Action
+![Dashboard](assets/dashboard.png)
+
+### Resume Agent — ATS Scoring (80/100)
+![Resume](assets/resume.png)
+
+### DSA Coach — Adaptive Problem Generation
+![DSA](assets/dsa.png)
+
+### GD/HR Simulator — Evaluation Complete (78/100)
+![Interview](assets/interview.png)
+
+---
 
 ---
 
