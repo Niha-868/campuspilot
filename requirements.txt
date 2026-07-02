@@ -1,0 +1,6 @@
+Flask
+groq
+pypdf
+mcp
+python-dotenv
+reportlab

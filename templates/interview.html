@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Simulator - CampusPilot{% endblock %}
+
+{% block content %}
+<div class="grid-2 fade-in">
+    <!-- Left: Main Simulation Workspace -->
+    <div>
+        <h1>Interview & GD Simulator</h1>
+        <p>Prepare for behavioral assessments, pressure questions, and group discussions. Practice responding to arguments or questions and get graded on structure, confidence, and professionalism.</p>
+
+        {% if history %}
+            <!-- Active Session: Chat Interface -->
+            <div class="card-glass" style="margin-top: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                    <h3 style="margin-bottom: 0;">Active Round: {{ mode }} Mode</h3>
+                    <span class="score-badge" style="background: rgba(139, 92, 246, 0.1); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.2);">
+                        {{ topic }}
+                    </span>
+                </div>
+
+                <!-- Chat bubble stack -->
+                <div class="chat-container" id="chat-container">
+                    {% for msg in history %}
+                        <div class="chat-bubble {% if msg.sender == 'Student' %}student{% else %}agent{% endif %}">
+                            <span class="chat-sender">{{ msg.sender }}</span>
+                            <span style="white-space: pre-wrap;">{{ msg.text }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Reply form -->
+                <form action="{{ url_for('interview') }}" method="POST" style="display: flex; gap: 12px;">
+                    <input type="hidden" name="action" value="message">
+                    <input type="text" name="user_message" placeholder="Type your response here..." required autocomplete="off" style="margin-bottom: 0; flex: 1;">
+                    <button type="submit" class="btn btn-accent" style="padding: 12px 20px;">Send</button>
+                </form>
+
+                <!-- End session trigger -->
+                <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 16px; display: flex; justify-content: space-between;">
+                    <span style="font-size: 13px; color: var(--text-secondary); display: flex; align-items: center;">
+                        ⚠️ Submit to end the round and receive your score.
+                    </span>
+                    <form action="{{ url_for('interview') }}" method="POST" style="margin: 0;">
+                        <input type="hidden" name="action" value="submit">
+                        <button type="submit" class="btn btn-secondary" style="border-color: var(--danger-color); color: var(--danger-color);">
+                            End & Evaluate Session
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            <!-- No Active Session: Show Starter Form or Latest Eval -->
+            {% if eval_result %}
+                <!-- Latest Evaluation Card -->
+                <div class="card-glass" style="margin-top: 24px; border-left: 4px solid var(--color-accent-secondary);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                        <h2 style="margin-bottom: 0; color: var(--color-accent-secondary);">Evaluation Complete!</h2>
+                        <span class="score-badge {% if eval_result.score < 75 %}low{% endif %}" style="font-size: 18px; padding: 6px 16px;">
+                            {{ eval_result.score }}/100
+                        </span>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: var(--text-primary);">Overall Critique:</h4>
+                        <div style="color: var(--text-secondary); font-size: 14.5px; line-height: 1.6; white-space: pre-wrap;">
+                            {{ eval_result.feedback }}
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <!-- Confidence Signals -->
+                        <div style="background: rgba(16, 185, 129, 0.04); border: 1px solid rgba(16, 185, 129, 0.15); padding: 16px; border-radius: 12px;">
+                            <h4 style="color: #34d399; font-size: 14px; margin-bottom: 8px;">🟢 Confidence Signals</h4>
+                            {% if eval_result.confidence_signals %}
+                                <ul style="list-style-position: inside; font-size: 13px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 4px;">
+                                    {% for sig in eval_result.confidence_signals %}
+                                        <li>{{ sig }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p style="font-size: 12px; font-style: italic;">No specific positive indicators flagged.</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Weakness Signals -->
+                        <div style="background: rgba(239, 68, 68, 0.04); border: 1px solid rgba(239, 68, 68, 0.15); padding: 16px; border-radius: 12px;">
+                            <h4 style="color: #f87171; font-size: 14px; margin-bottom: 8px;">🔴 Areas of Concern</h4>
+                            {% if eval_result.weakness_signals %}
+                                <ul style="list-style-position: inside; font-size: 13px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 4px;">
+                                    {% for sig in eval_result.weakness_signals %}
+                                        <li>{{ sig }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p style="font-size: 12px; font-style: italic;">No major gaps flagged. Well spoken!</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Empty state -->
+                <div class="card-glass" style="margin-top: 24px; text-align: center; padding: 40px 20px;">
+                    <p style="font-size: 40px; margin-bottom: 8px;">👔</p>
+                    <h3>Simulation Standby</h3>
+                    <p>Select your module configuration on the right side to start practicing.</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- Right: Setup Simulation -->
+    <div>
+        {% if not history %}
+            <div class="card-glass">
+                <h2>Configure Simulation</h2>
+                <p>Choose your assessment mode to start the agent session.</p>
+
+                <form action="{{ url_for('interview') }}" method="POST" id="start-form">
+                    <input type="hidden" name="action" value="start">
+
+                    <label for="mode">Interview Mode:</label>
+                    <select id="mode" name="mode" onchange="toggleInputs(this.value)">
+                        <option value="HR">HR Round (One-on-One Behavioral)</option>
+                        <option value="GD">GD Round (Group Discussion simulator)</option>
+                    </select>
+
+                    <!-- HR Questions Group -->
+                    <div id="hr-config-group">
+                        <label for="hr_topic">Select Starter HR Scenario:</label>
+                        <select id="hr_topic" name="topic_hr">
+                            {% for q in seed_questions %}
+                                <option value="{{ q.question }}">{{ q.question[:45] }}...</option>
+                            {% endfor %}
+                            <option value="Tell me about yourself.">Tell me about yourself (Generic Intro)</option>
+                        </select>
+                    </div>
+
+                    <!-- GD Topics Group -->
+                    <div id="gd-config-group" style="display: none;">
+                        <label for="gd_topic">Select Group Discussion Topic:</label>
+                        <select id="gd_topic" name="topic_gd">
+                            {% for topic in gd_topics %}
+                                <option value="{{ topic.topic }}">{{ topic.topic }}</option>
+                            {% endfor %}
+                            <option value="Is work-life balance possible in Indian IT service companies?">Work-life balance in Indian IT</option>
+                        </select>
+                    </div>
+
+                    <!-- Hidden input to submit the actual combined topic parameter -->
+                    <input type="hidden" id="combined_topic" name="topic" value="">
+
+                    <button type="button" class="btn btn-primary" onclick="submitStartForm()" style="width: 100%; margin-top: 8px;">
+                        Start Live Simulator
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div class="card-glass">
+                <h2>Session Parameters</h2>
+                <p style="font-size: 13px; margin-bottom: 8px;"><strong>Active Mode:</strong> {{ mode }}</p>
+                <p style="font-size: 13px; margin-bottom: 16px;"><strong>Topic:</strong> {{ topic }}</p>
+                <div style="background: rgba(139, 92, 246, 0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.15); font-size: 12.5px; color: #d1d5db;">
+                    💡 <strong>Tips:</strong> For HR, formulate your answers using the STAR method (Situation, Task, Action, Result). For GD, show active listening, state facts, and don't speak too fast.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-scroll chat window to bottom on load
+    window.onload = function() {
+        const chatContainer = document.getElementById('chat-container');
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    };
+
+    function toggleInputs(modeVal) {
+        const hrGroup = document.getElementById('hr-config-group');
+        const gdGroup = document.getElementById('gd-config-group');
+        
+        if (modeVal === 'GD') {
+            hrGroup.style.display = 'none';
+            gdGroup.style.display = 'block';
+        } else {
+            hrGroup.style.display = 'block';
+            gdGroup.style.display = 'none';
+        }
+    }
+
+    function submitStartForm() {
+        const modeVal = document.getElementById('mode').value;
+        const combinedTopicInput = document.getElementById('combined_topic');
+        
+        if (modeVal === 'GD') {
+            combinedTopicInput.value = document.getElementById('gd_topic').value;
+        } else {
+            combinedTopicInput.value = document.getElementById('hr_topic').value;
+        }
+        
+        document.getElementById('start-form').submit();
+    }
+</script>
+{% endblock %}

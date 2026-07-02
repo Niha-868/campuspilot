@@ -1,0 +1,141 @@
+{
+  "fresher_2026": {
+    "student_id": "fresher_2026",
+    "weak_areas": {
+      "Resume vs Software Engineer": 10.0,
+      "Resume vs AI&ML Engineer": 10.0,
+      "Resume vs AI  Engineer": 7.0,
+      "Arrays": 4.0,
+      "Logical Reasoning": 8.0
+    },
+    "session_history": [
+      {
+        "stage": "resume",
+        "score": 0.0,
+        "feedback": "ATS Score: 0. Weak sections: Error calling Resume Agent: 401 UNAUTHENTICATED. {'error': {'code': 401, 'message': 'Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.', 'status': 'UNAUTHENTICATED', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'ACCESS_TOKEN_TYPE_UNSUPPORTED', 'metadata': {'method': 'google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent', 'service': 'generativelanguage.googleapis.com'}}]}}.",
+        "topic": "Resume vs Software Engineer",
+        "timestamp": "2026-06-29 22:52:37"
+      },
+      {
+        "stage": "resume",
+        "score": 0.0,
+        "feedback": "ATS Score: 0. Weak sections: Error calling Resume Agent: 401 UNAUTHENTICATED. {'error': {'code': 401, 'message': 'Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.', 'status': 'UNAUTHENTICATED', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'ACCESS_TOKEN_TYPE_UNSUPPORTED', 'metadata': {'service': 'generativelanguage.googleapis.com', 'method': 'google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent'}}]}}.",
+        "topic": "Resume vs AI&ML Engineer",
+        "timestamp": "2026-06-29 22:53:02"
+      },
+      {
+        "stage": "resume",
+        "score": 0.0,
+        "feedback": "ATS Score: 0. Weak sections: Error calling Resume Agent: 401 UNAUTHENTICATED. {'error': {'code': 401, 'message': 'Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.', 'status': 'UNAUTHENTICATED', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'ACCESS_TOKEN_TYPE_UNSUPPORTED', 'metadata': {'method': 'google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent', 'service': 'generativelanguage.googleapis.com'}}]}}.",
+        "topic": "Resume vs AI&ML Engineer",
+        "timestamp": "2026-06-29 23:07:05"
+      },
+      {
+        "stage": "resume",
+        "score": 0.0,
+        "feedback": "ATS Score: 0. Weak sections: Error calling Resume Agent: 401 UNAUTHENTICATED. {'error': {'code': 401, 'message': 'Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.', 'status': 'UNAUTHENTICATED', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'ACCESS_TOKEN_TYPE_UNSUPPORTED', 'metadata': {'service': 'generativelanguage.googleapis.com', 'method': 'google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent'}}]}}.",
+        "topic": "Resume vs Software Engineer",
+        "timestamp": "2026-06-30 18:12:42"
+      },
+      {
+        "stage": "resume",
+        "score": 0.0,
+        "feedback": "ATS Score: 0. Weak sections: Error calling Resume Agent: 401 UNAUTHENTICATED. {'error': {'code': 401, 'message': 'Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.', 'status': 'UNAUTHENTICATED', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'ACCESS_TOKEN_TYPE_UNSUPPORTED', 'metadata': {'method': 'google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent', 'service': 'generativelanguage.googleapis.com'}}]}}.",
+        "topic": "Resume vs AI&ML Engineer",
+        "timestamp": "2026-06-30 18:13:09"
+      },
+      {
+        "stage": "resume",
+        "score": 0.0,
+        "feedback": "ATS Score: 0. Weak sections: Error calling Resume Agent: 401 UNAUTHENTICATED. {'error': {'code': 401, 'message': 'Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.', 'status': 'UNAUTHENTICATED', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'ACCESS_TOKEN_TYPE_UNSUPPORTED', 'metadata': {'service': 'generativelanguage.googleapis.com', 'method': 'google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent'}}]}}.",
+        "topic": "Resume vs AI  Engineer",
+        "timestamp": "2026-06-30 18:13:30"
+      },
+      {
+        "stage": "resume",
+        "score": 80.0,
+        "feedback": "ATS Score: 80. Weak sections: Lack of professional experience, No mention of relevant certifications like TensorFlow or Keras.",
+        "topic": "Resume vs AI engineer",
+        "timestamp": "2026-07-01 17:49:51"
+      },
+      {
+        "stage": "resume",
+        "score": 80.0,
+        "feedback": "ATS Score: 80. Weak sections: Project descriptions lack depth on challenges overcome and impact, Certifications section could be more comprehensive.",
+        "topic": "Resume vs AI engineer",
+        "timestamp": "2026-07-01 17:49:52"
+      },
+      {
+        "stage": "resume",
+        "score": 80.0,
+        "feedback": "ATS Score: 80. Weak sections: Project descriptions lack detail on tech stack and challenges overcome, Education section missing CGPA and academic achievements.",
+        "topic": "Resume vs AI  Engineer",
+        "timestamp": "2026-07-01 17:52:16"
+      },
+      {
+        "stage": "hr",
+        "score": 78.0,
+        "feedback": "Interview HR on 'Why do you want to join our company as a fresher?'. Score: 78. Feedback: The student demonstrated clear structure and good use of examples. However, they could improve by be...",
+        "topic": "Why do you want to join our company as a fresher?",
+        "timestamp": "2026-07-01 17:55:57"
+      },
+      {
+        "stage": "gd",
+        "score": 78.0,
+        "feedback": "Interview GD on 'Is AI a threat to software engineering jobs in India?'. Score: 78. Feedback: The student demonstrated clear structure and good use of examples. However, they could improve by be...",
+        "topic": "Is AI a threat to software engineering jobs in India?",
+        "timestamp": "2026-07-01 17:57:38"
+      },
+      {
+        "stage": "dsa",
+        "score": 95.0,
+        "feedback": "Verdict: Accepted. Time: O(n). feedback: The solution is correct and efficient. It iterates through the array only once and keeps track of th...",
+        "topic": "Arrays",
+        "timestamp": "2026-07-01 17:58:38"
+      },
+      {
+        "stage": "dsa",
+        "score": 90.0,
+        "feedback": "Verdict: Accepted. Time: O(n). feedback: Good solution using a simple iterative approach. Handles edge cases well and has a linear time compl...",
+        "topic": "Arrays",
+        "timestamp": "2026-07-01 17:59:01"
+      },
+      {
+        "stage": "dsa",
+        "score": 60.0,
+        "feedback": "Verdict: Needs Improvement. Time: O(n). feedback: The solution has a logical error. It does not reset the current_count when it encounters a zero. It ...",
+        "topic": "Arrays",
+        "timestamp": "2026-07-01 17:59:15"
+      },
+      {
+        "stage": "dsa",
+        "score": 60.0,
+        "feedback": "Verdict: Needs Improvement. Time: O(1). feedback: The solution is incomplete, the student has defined variables but hasn't implemented the logic to fi...",
+        "topic": "Arrays",
+        "timestamp": "2026-07-01 17:59:25"
+      },
+      {
+        "stage": "aptitude",
+        "score": 0.0,
+        "feedback": "Aptitude Question apt_q4. Correct: False.",
+        "topic": "Logical Reasoning",
+        "timestamp": "2026-07-01 18:00:58"
+      },
+      {
+        "stage": "aptitude",
+        "score": 100.0,
+        "feedback": "Aptitude Question apt_q2. Correct: True.",
+        "topic": "Quantitative",
+        "timestamp": "2026-07-01 18:02:08"
+      },
+      {
+        "stage": "aptitude",
+        "score": 100.0,
+        "feedback": "Aptitude Question apt_q1. Correct: True.",
+        "topic": "Quantitative",
+        "timestamp": "2026-07-01 18:02:39"
+      }
+    ],
+    "current_focus": "DSA Coach (Practice easy-medium questions on: Arrays)"
+  }
+}

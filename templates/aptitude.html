@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Aptitude Training - CampusPilot{% endblock %}
+
+{% block content %}
+<div class="grid-2 fade-in" style="grid-template-columns: 2fr 1fr;">
+    <!-- Main Workspace -->
+    <div>
+        <h1>Aptitude Training</h1>
+        <p>Aptitude tests are the first filter for almost all Indian campus recruitment drives (TCS NQT, Infosys, Wipro, AMCAT, Elitmus). Master Quantitative, Logical, and Verbal topics.</p>
+
+        {% if eval_result %}
+            <!-- Results Screen -->
+            <div class="card-glass" style="margin-top: 24px; border-left: 4px solid {% if eval_result.is_correct %}var(--color-accent-secondary){% else %}var(--danger-color){% endif %};">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                    <h3 style="margin-bottom: 0;">Question Outcome</h3>
+                    <span class="score-badge {% if not eval_result.is_correct %}low{% endif %}" style="font-size: 15px; padding: 4px 12px;">
+                        {% if eval_result.is_correct %}Correct (+100 XP){% else %}Incorrect (+0 XP){% endif %}
+                    </span>
+                </div>
+
+                <div style="margin-bottom: 20px; font-size: 15px; line-height: 1.6;">
+                    <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;">Question:</strong>
+                    <p style="color: #d1d5db; margin-bottom: 16px;">{{ eval_result.question.question }}</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+                        {% for opt in eval_result.question.options %}
+                            <div style="padding: 10px 14px; border-radius: 6px; font-size: 14px; 
+                                {% if opt.startswith(eval_result.question.answer) %}
+                                    background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399;
+                                {% elif opt.startswith(eval_result.selected) and not eval_result.is_correct %}
+                                    background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171;
+                                {% else %}
+                                    background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); color: var(--text-secondary);
+                                {% endif %}">
+                                {{ opt }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">Step-by-Step Explanation:</strong>
+                    <div style="background: rgba(0,0,0,0.25); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); color: #9ca3af; font-size: 13.5px; font-style: italic;">
+                        {{ eval_result.explanation }}
+                    </div>
+                </div>
+
+                <a href="{{ url_for('aptitude') }}" class="btn btn-primary">Try Another Question</a>
+            </div>
+        {% else %}
+            <!-- Active Question -->
+            {% if question %}
+                <div class="card-glass" style="margin-top: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                        <span style="background: rgba(139, 92, 246, 0.12); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.2); padding: 4px 10px; border-radius: 12px; font-size: 12.5px; font-weight: 500;">
+                            {{ question.category }}
+                        </span>
+                        <span style="font-size: 12px; color: var(--text-secondary);">ID: {{ question.id }}</span>
+                    </div>
+
+                    <form action="{{ url_for('aptitude') }}" method="POST">
+                        <input type="hidden" name="q_id" value="{{ question.id }}">
+                        
+                        <p style="font-size: 16px; color: var(--text-primary); font-weight: 500; margin-bottom: 24px; line-height: 1.6;">
+                            {{ question.question }}
+                        </p>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+                            {% for opt in question.options %}
+                                <label style="display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--border-color); border-radius: 8px; background: rgba(255,255,255,0.02); cursor: pointer; transition: background-color 0.2s, border-color 0.2s;">
+                                    <input type="radio" name="option" value="{{ opt[0] }}" required style="accent-color: var(--color-accent-primary);">
+                                    <span style="font-size: 14px; color: var(--text-primary);">{{ opt }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit" class="btn btn-accent" style="width: 100%;">Submit Answer</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="card-glass" style="margin-top: 24px; text-align: center; padding: 40px;">
+                    <p>No questions loaded in database.</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- Info side block -->
+    <div>
+        <div class="card-glass" style="margin-top: 24px;">
+            <h2>Aptitude Scoring</h2>
+            <p style="font-size: 13px;">Correct submissions score 100/100, which reduces weak areas severity. Wrong answers score 0/100, marking the category as a weak focus.</p>
+            <div style="background: rgba(16, 185, 129, 0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.15); font-size: 12.5px; color: #d1d5db; margin-top: 16px;">
+                🔑 <strong>Pro Tip:</strong> Most companies have individual sectional cut-offs. Do not ignore Verbal and Logical sections!
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

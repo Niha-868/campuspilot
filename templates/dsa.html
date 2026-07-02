@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}DSA Coach - CampusPilot{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <h1>DSA Coach Agent</h1>
+    <p>Train your algorithmic solving skills. Generate placement-specific problems, request conceptual clues, and write code to receive real-time evaluations on correctness, space, and time complexity.</p>
+
+    <div class="grid-2" style="margin-top: 32px;">
+        <!-- Left: Active Problem and Editor -->
+        <div>
+            {% if problem %}
+                <div class="card-glass" style="margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                        <h2 style="margin-bottom: 0;">{{ problem.title }}</h2>
+                        <div>
+                            <span style="background: rgba(139, 92, 246, 0.1); color: #a78bfa; padding: 4px 10px; border-radius: 12px; font-size: 12px; border: 1px solid rgba(139, 92, 246, 0.2); margin-right: 8px;">
+                                {{ problem.topic }}
+                            </span>
+                            <span class="score-badge {% if problem.difficulty == 'Hard' %}low{% endif %}" style="font-size: 12px;">
+                                {{ problem.difficulty }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Problem details -->
+                    <div style="font-size: 15px; line-height: 1.6; color: #d1d5db; display: flex; flex-direction: column; gap: 16px;">
+                        <div>
+                            <p style="white-space: pre-line; color: var(--text-primary);">{{ problem.description }}</p>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--text-primary); font-size: 14px; margin-bottom: 4px;">Input Format:</h4>
+                            <p style="font-size: 13.5px; margin-bottom: 0;">{{ problem.input_format }}</p>
+                        </div>
+
+                        <div>
+                            <h4 style="color: var(--text-primary); font-size: 14px; margin-bottom: 4px;">Output Format:</h4>
+                            <p style="font-size: 13.5px; margin-bottom: 0;">{{ problem.output_format }}</p>
+                        </div>
+
+                        <div>
+                            <h4 style="color: var(--text-primary); font-size: 14px; margin-bottom: 4px;">Constraints:</h4>
+                            <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-size: 13px;">{{ problem.constraints }}</code>
+                        </div>
+
+                        <!-- Sample -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px;">
+                            <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                                <h4 style="font-size: 13px; margin-bottom: 6px; color: var(--text-secondary);">Sample Input:</h4>
+                                <pre style="font-family: monospace; font-size: 12px; white-space: pre-wrap;">{{ problem.sample_input }}</pre>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                                <h4 style="font-size: 13px; margin-bottom: 6px; color: var(--text-secondary);">Sample Output:</h4>
+                                <pre style="font-family: monospace; font-size: 12px; white-space: pre-wrap;">{{ problem.sample_output }}</pre>
+                            </div>
+                        </div>
+
+                        {% if problem.sample_explanation %}
+                            <div>
+                                <h4 style="color: var(--text-primary); font-size: 14px; margin-bottom: 4px;">Explanation:</h4>
+                                <p style="font-size: 13.5px; margin-bottom: 0; font-style: italic;">{{ problem.sample_explanation }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Coding Playground -->
+                <div class="card-glass">
+                    <h3>Coding Workspace</h3>
+                    <p style="font-size: 13px;">Write your Python solution below. Ensure proper function naming and standard inputs/outputs if required.</p>
+                    
+                    <form action="{{ url_for('dsa') }}" method="POST">
+                        <input type="hidden" name="action" value="submit">
+                        <textarea class="code-editor" name="student_code" placeholder="# Write your python code here...&#10;def solve():&#10;    pass" required style="width: 100%; border: 1px solid var(--border-color); background: #111827; color: #a7f3d0; padding: 16px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; min-height: 250px; outline: none; margin-bottom: 16px;">{{ submitted_code or '# Python 3 template&#10;class Solution:&#10;    def solve(self, data):&#10;        # Write your code here&#10;        pass' }}</textarea>
+                        
+                        <div style="display: flex; gap: 16px; justify-content: flex-end;">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('hint-form').submit();">
+                                💡 Request Hint
+                            </button>
+                            <button type="submit" class="btn btn-accent">Submit Solution</button>
+                        </div>
+                    </form>
+
+                    <!-- Hidden Hint Form -->
+                    <form id="hint-form" action="{{ url_for('dsa') }}" method="POST" style="display: none;">
+                        <input type="hidden" name="action" value="hint">
+                    </form>
+                </div>
+            {% else %}
+                <!-- Empty state -->
+                <div class="card-glass" style="text-align: center; padding: 60px 40px;">
+                    <p style="font-size: 48px; margin-bottom: 16px;">💻</p>
+                    <h2>No Problem Selected</h2>
+                    <p>Select a topic and difficulty on the right panel to generate your training problem.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Right: Problem Selector / Hint / Results -->
+        <div>
+            <!-- Topic selector -->
+            <div class="card-glass" style="margin-bottom: 24px;">
+                <h2>Generate Challenge</h2>
+                <p>Pick a topic and difficulty to pull a question via the DSA Coach.</p>
+                
+                <form action="{{ url_for('dsa') }}" method="POST">
+                    <input type="hidden" name="action" value="generate">
+                    
+                    <label for="topic">Data Structure/Algorithm Topic:</label>
+                    <select id="topic" name="topic">
+                        <option value="Arrays">Arrays</option>
+                        <option value="Strings">Strings</option>
+                        <option value="Linked Lists">Linked Lists</option>
+                        <option value="Stacks & Queues">Stacks & Queues</option>
+                        <option value="Trees & Graphs">Trees & Graphs</option>
+                        <option value="Dynamic Programming">Dynamic Programming (DP)</option>
+                        <option value="Recursion & Backtracking">Recursion & Backtracking</option>
+                        <option value="Searching & Sorting">Searching & Sorting</option>
+                    </select>
+
+                    <label for="difficulty">Target Difficulty:</label>
+                    <select id="difficulty" name="difficulty">
+                        <option value="Easy">Easy (IT Services Conglomerates)</option>
+                        <option value="Medium">Medium (IT Specialists/MNCs)</option>
+                        <option value="Hard">Hard (Product Tech Giants)</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Generate Problem</button>
+                </form>
+            </div>
+
+            <!-- Hint Display -->
+            {% if hint %}
+                <div class="card-glass" style="margin-bottom: 24px; border-left: 4px solid var(--color-accent-primary); background: rgba(139, 92, 246, 0.05);">
+                    <h3 style="color: var(--color-accent-primary); font-size: 15px; margin-bottom: 8px;">💡 Coach Clue</h3>
+                    <p style="margin-bottom: 0; font-size: 14px; font-style: italic; color: var(--text-primary);">{{ hint }}</p>
+                </div>
+            {% endif %}
+
+            <!-- Submission Evaluation Display -->
+            {% if eval_result %}
+                <div class="card-glass" style="border-left: 4px solid var(--color-accent-secondary);">
+                    <h2>Submission Evaluation</h2>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                        <div>
+                            <span style="font-size: 11px; color: var(--text-secondary); display: block;">Verdict</span>
+                            <strong style="color: {% if eval_result.verdict == 'Accepted' %}var(--color-accent-secondary){% else %}var(--danger-color){% endif %}; font-size: 18px;">
+                                {{ eval_result.verdict }}
+                            </strong>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 11px; color: var(--text-secondary); display: block;">Score</span>
+                            <span class="score-badge {% if eval_result.score < 75 %}low{% endif %}" style="font-size: 16px;">
+                                {{ eval_result.score }}/100
+                            </span>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; font-size: 13px;">
+                        <div style="background: rgba(0,0,0,0.2); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+                            <span style="color: var(--text-secondary); display: block;">Time Complexity:</span>
+                            <code style="color: #a78bfa;">{{ eval_result.time_complexity or 'N/A' }}</code>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.2); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+                            <span style="color: var(--text-secondary); display: block;">Space Complexity:</span>
+                            <code style="color: #a78bfa;">{{ eval_result.space_complexity or 'N/A' }}</code>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px;">Detailed Critique:</h4>
+                        <div style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; white-space: pre-wrap;">
+                            {{ eval_result.detailed_feedback }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

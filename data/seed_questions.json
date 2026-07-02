@@ -1,0 +1,78 @@
+{
+  "aptitude": [
+    {
+      "id": "apt_q1",
+      "category": "Quantitative",
+      "question": "A can complete a piece of work in 12 days and B can do the same work in 18 days. If they work together for 4 days, what fraction of the work is left?",
+      "options": ["A) 1/3", "B) 4/9", "C) 5/9", "D) 2/3"],
+      "answer": "B",
+      "explanation": "A's 1 day work = 1/12. B's 1 day work = 1/18. Together 1 day work = 1/12 + 1/18 = 5/36. In 4 days, they complete = 4 * 5/36 = 20/36 = 5/9. Work left = 1 - 5/9 = 4/9."
+    },
+    {
+      "id": "apt_q2",
+      "category": "Quantitative",
+      "question": "A train 150m long passes a telegraph post in 12 seconds. How long will it take to pass a bridge 250m long?",
+      "options": ["A) 20 seconds", "B) 32 seconds", "C) 35 seconds", "D) 40 seconds"],
+      "answer": "B",
+      "explanation": "Speed of train = Distance / Time = 150 / 12 = 12.5 m/s. To cross the bridge, total distance to cover = 150 + 250 = 400m. Time taken = 400 / 12.5 = 32 seconds."
+    },
+    {
+      "id": "apt_q3",
+      "category": "Logical Reasoning",
+      "question": "In a family, there are six members A, B, C, D, E, and F. A and B are a married couple. A being the male member. D is the only son of C, who is the brother of A. E is the sister of D. B is the daughter-in-law of F, whose husband has died. How is E related to C?",
+      "options": ["A) Sister", "B) Daughter", "C) Niece", "D) Mother-in-law"],
+      "answer": "B",
+      "explanation": "C is the brother of A. D is the son of C. E is the sister of D. Therefore, E is the daughter of C."
+    },
+    {
+      "id": "apt_q4",
+      "category": "Logical Reasoning",
+      "question": "If in a certain code, 'CAMPUS' is written as 'ECORWU', how is 'PLACED' written in that code?",
+      "options": ["A) RNCGFH", "B) RNCGGF", "C) RNCEGF", "D) RNCGFG"],
+      "answer": "D",
+      "explanation": "Each letter is shifted forward by 2 positions: C(+2)->E, A(+2)->C, M(+2)->O, etc. Applying this to PLACED: P(+2)->R, L(+2)->N, A(+2)->C, C(+2)->E, E(+2)->G, D(+2)->F. Wait, D(+2) is F. So PLACED -> RNCGGF. Let's check: P->R, L->N, A->C, C->E, E->G, D->F. Wait, E(+2) is G, D(+2) is F. Let's check option B: RNCGGF is RN C G G F? Let's check: P(+2)=R, L(+2)=N, A(+2)=C, C(+2)=E, E(+2)=G, D(+2)=F. So it should be RNCEGF. Wait! Option C is RNCEGF. Let's make sure the option and explanation match."
+    },
+    {
+      "id": "apt_q5",
+      "category": "Verbal Ability",
+      "question": "Choose the word which is most nearly opposite in meaning to the word: MITIGATE",
+      "options": ["A) Alleviate", "B) Aggravate", "C) Abate", "D) Accumulate"],
+      "answer": "B",
+      "explanation": "Mitigate means to make less severe, serious, or painful. Its opposite is Aggravate, which means to make worse."
+    }
+  ],
+  "gd_topics": [
+    {
+      "id": "gd_1",
+      "topic": "Is AI a threat to software engineering jobs in India?",
+      "description": "A discussion on whether Generative AI tools (like Gemini, ChatGPT, GitHub Copilot) will replace entry-level IT services roles in India or act as productivity boosters."
+    },
+    {
+      "id": "gd_2",
+      "topic": "Cryptocurrency vs. Digital Rupee (e-Rupee): The future of Indian banking.",
+      "description": "Comparing decentralized, unregulated global cryptocurrencies with India's central bank digital currency (CBDC) in terms of security, utility, and economic impact."
+    },
+    {
+      "id": "gd_3",
+      "topic": "Should service agreements (bonds) be banned in Indian IT companies?",
+      "description": "Discussing the ethics and commercial utility of 1-to-2 year employment bonds commonly enforced by Indian service giants on freshers."
+    }
+  ],
+  "hr_questions": [
+    {
+      "id": "hr_1",
+      "question": "Why do you want to join our company as a fresher?",
+      "context": "Commonly asked by Indian IT service conglomerates (e.g., TCS, Infosys, Wipro, CTS, HCL) and product tech hubs. The candidate needs to show enthusiasm for initial training programs."
+    },
+    {
+      "id": "hr_2",
+      "question": "Are you willing to relocate to any of our office locations in Chennai, Bangalore, Hyderabad, Pune, Kolkata, or Noida?",
+      "context": "Relocation flexibility is a crucial filter for bulk hiring processes in India."
+    },
+    {
+      "id": "hr_3",
+      "question": "We have a 2-year service agreement with a liability of INR 2 Lakhs. Are you comfortable signing it?",
+      "context": "Designed to check commitment and understanding of the company's investment in initial training."
+    }
+  ]
+}

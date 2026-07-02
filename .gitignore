@@ -1,0 +1,28 @@
+# Python caching
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Keys / Secrets
+*.key
+*.pem
+credentials.json
+client_secret*.json
+
+# Local database/profiles (contains student information)
+campuspilot/data/student_profiles.json
+
+# IDE / OS metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CampusPilot - Placement Coach{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="logo">
+                🎓 <span>CampusPilot</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}"
+                            class="{% if request.endpoint == 'index' %}active{% endif %}">Dashboard</a></li>
+                    <li><a href="{{ url_for('resume') }}"
+                            class="{% if request.endpoint == 'resume' %}active{% endif %}">Resume Agent</a></li>
+                    <li><a href="{{ url_for('dsa') }}" class="{% if request.endpoint == 'dsa' %}active{% endif %}">DSA
+                            Coach</a></li>
+                    <li><a href="{{ url_for('interview') }}"
+                            class="{% if request.endpoint == 'interview' %}active{% endif %}">GD/HR Simulator</a></li>
+                    <li><a href="{{ url_for('aptitude') }}"
+                            class="{% if request.endpoint == 'aptitude' %}active{% endif %}">Aptitude Practice</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container fade-in">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2026 CampusPilot - AI Campus Placement Capstone project. Built with Groq API.</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CampusPilot{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+        <div>
+            <h1>Placement Prep Dashboard</h1>
+            <p style="margin-bottom: 0;">Welcome back! Track your preparation progress and focus areas here.</p>
+        </div>
+        <div class="card-glass" style="padding: 12px 24px; text-align: right;">
+            <span style="font-size: 12px; color: var(--text-secondary); display: block;">Student Profile</span>
+            <strong style="color: var(--color-accent-secondary);">{{ profile.student_id }}</strong>
+        </div>
+    </div>
+
+    <!-- Active Recommendation and Focus -->
+    <div class="card-glass" style="margin-bottom: 32px; border-left: 4px solid var(--color-accent-primary); background: linear-gradient(90deg, rgba(139, 92, 246, 0.05), rgba(17, 24, 39, 0.7));">
+        <h3 style="color: var(--color-accent-primary); font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Next Focus Area Recommended by Tracker</h3>
+        <h2 style="margin-bottom: 8px; font-weight: 700; color: #ffffff;">{{ profile.current_focus }}</h2>
+        <p style="margin-bottom: 0; font-size: 15px;">Your orchestrator analyzed your history and directed you here. Start training this section to raise your placement readiness.</p>
+    </div>
+
+    <div class="grid-2">
+        <!-- Weak Areas Section -->
+        <div class="card-glass">
+            <h2>Target Areas (Weaknesses)</h2>
+            <p>Topics requiring attention. Severity is calculated based on session scores. Get scores above 75 to clear them!</p>
+            
+            {% if profile.weak_areas %}
+                <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 24px;">
+                    {% for topic, severity in profile.weak_areas.items() %}
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px;">
+                                <strong>{{ topic }}</strong>
+                                <span class="score-badge {% if severity > 5 %}low{% endif %}">Severity: {{ "%.1f"|format(severity) }}/10</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: {{ severity * 10 }}%; background: linear-gradient(90deg, #10b981, #ef4444);"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                    <p style="font-size: 40px; margin-bottom: 12px;">🎉</p>
+                    <p>No active weak areas! Keep up the good work and maintain your performance.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Training Modules Shortcuts -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div class="card-glass" style="padding: 20px;">
+                <h3 style="font-size: 18px; display: flex; align-items: center; gap: 8px;">📄 Resume Review</h3>
+                <p style="font-size: 13px; margin-bottom: 16px;">Test your resume ATS score against target job roles and view suggested rewrites.</p>
+                <a href="{{ url_for('resume') }}" class="btn btn-primary btn-secondary" style="width: 100%; display: block;">Open Resume Agent</a>
+            </div>
+
+            <div class="card-glass" style="padding: 20px;">
+                <h3 style="font-size: 18px; display: flex; align-items: center; gap: 8px;">💻 DSA Playground</h3>
+                <p style="font-size: 13px; margin-bottom: 16px;">Solve topic-wise DSA problems. Request conceptual hints and submit code for review.</p>
+                <a href="{{ url_for('dsa') }}" class="btn btn-primary btn-secondary" style="width: 100%; display: block;">Open DSA Coach</a>
+            </div>
+
+            <div class="card-glass" style="padding: 20px;">
+                <h3 style="font-size: 18px; display: flex; align-items: center; gap: 8px;">💬 Interview & GD</h3>
+                <p style="font-size: 13px; margin-bottom: 16px;">Simulate Group Discussions or behavioral HR interviews with contextual follow-ups.</p>
+                <a href="{{ url_for('interview') }}" class="btn btn-primary btn-secondary" style="width: 100%; display: block;">Open Simulator</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- History log -->
+    <div class="card-glass" style="margin-top: 32px;">
+        <h2>Session & Activity History</h2>
+        <p>A log of your training history recorded by the tracker agent.</p>
+        
+        {% if profile.session_history %}
+            <div style="overflow-x: auto; margin-top: 16px;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-secondary);">
+                            <th style="padding: 12px 8px;">Timestamp</th>
+                            <th style="padding: 12px 8px;">Stage</th>
+                            <th style="padding: 12px 8px;">Topic / Context</th>
+                            <th style="padding: 12px 8px;">Score</th>
+                            <th style="padding: 12px 8px;">Feedback summary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in profile.session_history|reverse %}
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
+                                <td style="padding: 12px 8px; color: var(--text-secondary); white-space: nowrap;">{{ session.timestamp }}</td>
+                                <td style="padding: 12px 8px; font-weight: 500;">
+                                    {% if session.stage == 'resume' %}📄 Resume{% elif session.stage == 'dsa' %}💻 DSA{% elif session.stage == 'gd' %}💬 GD{% elif session.stage == 'hr' %}👔 HR{% else %}🎯 Aptitude{% endif %}
+                                </td>
+                                <td style="padding: 12px 8px; font-weight: 500;">{{ session.topic or 'N/A' }}</td>
+                                <td style="padding: 12px 8px;">
+                                    <span class="score-badge {% if session.score < 75 %}low{% endif %}">
+                                        {{ session.score }}/100
+                                    </span>
+                                </td>
+                                <td style="padding: 12px 8px; color: var(--text-secondary); max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ session.feedback }}">
+                                    {{ session.feedback }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 30px; color: var(--text-secondary); font-style: italic;">
+                No sessions completed yet. Select a module above to begin your training.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

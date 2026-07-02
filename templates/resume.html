@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Reviewer - CampusPilot{% endblock %}
+
+{% block content %}
+<div class="grid-2 fade-in">
+    <div>
+        <h1>Resume Review Agent</h1>
+        <p>Align your resume with specific industry job roles. Upload your PDF resume, specify the target role, and get detailed ATS scoring, keyword gaps, and instant professional rewrites.</p>
+
+        {% if latest_score %}
+            <!-- Results Screen -->
+            <div class="card-glass" style="margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                    <div>
+                        <span style="font-size: 13px; color: var(--text-secondary);">Target Role</span>
+                        <h2 style="margin-bottom: 0; color: var(--color-accent-primary);">{{ target_role }}</h2>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 13px; color: var(--text-secondary); display: block;">ATS Match Score</span>
+                        <span class="score-badge {% if latest_score.ats_score < 75 %}low{% endif %}" style="font-size: 20px; padding: 6px 16px;">
+                            {{ latest_score.ats_score }}/100
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Missing Keywords -->
+                <div style="margin-bottom: 24px;">
+                    <h3>Missing Keywords / Skills</h3>
+                    <p style="font-size: 13px;">Adding these keywords to your projects or skills list can increase your visibility in automated screening processes.</p>
+                    {% if latest_score.missing_keywords %}
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                            {% for kw in latest_score.missing_keywords %}
+                                <span style="background: rgba(139, 92, 246, 0.12); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;">
+                                    + {{ kw }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p style="color: var(--color-accent-secondary); font-style: italic;">No critical missing keywords identified!</p>
+                    {% endif %}
+                </div>
+
+                <!-- Weak Sections and Rewrite suggestion drawer -->
+                <div>
+                    <h3>Identified Weak Sections & Critiques</h3>
+                    <p style="font-size: 13px;">Select a section to generate an AI-powered rewrite using professional action verbs.</p>
+                    
+                    {% if latest_score.weak_sections %}
+                        <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+                            {% for section in latest_score.weak_sections %}
+                                <div class="card-glass" style="background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 12px;">
+                                    <p style="margin-bottom: 12px; color: var(--text-primary); font-size: 14px; font-weight: 500;">{{ section }}</p>
+                                    <button class="btn btn-secondary btn-small" onclick="requestRewrite('{{ section|escape }}', this)" style="padding: 6px 12px; font-size: 12px;">
+                                        ✨ Suggest Rewrite
+                                    </button>
+                                    <div class="rewrite-container" style="display: none; margin-top: 12px; padding: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2); font-size: 13.5px; color: #d1d5db; line-height: 1.5;">
+                                        <div class="loader" style="color: var(--text-secondary); font-style: italic;">Generating rewrite suggestions...</div>
+                                        <div class="suggestion-content" style="white-space: pre-line;"></div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p style="color: var(--color-accent-secondary); font-style: italic;">Your resume structure looks stellar!</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Upload Panel -->
+    <div>
+        <div class="card-glass">
+            <h2>Evaluate Resume</h2>
+            <p>Upload a fresh resume to trigger PII Redaction logs and run match evaluations.</p>
+            
+            <form action="{{ url_for('resume') }}" method="POST" enctype="multipart/form-data">
+                <label for="target_role">Target Placement Role:</label>
+                <input type="text" id="target_role" name="target_role" placeholder="e.g. Associate Software Engineer, Data Analyst, QA Engineer" required value="{{ target_role or 'Software Engineer' }}">
+                
+                <div class="file-upload-wrapper">
+                    <label for="resume_file" class="file-upload-label">
+                        <span style="font-size: 32px; margin-bottom: 8px;">📂</span>
+                        <strong id="file-label-text">Choose PDF Resume</strong>
+                        <span style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">PDF formats only (Max 5MB)</span>
+                    </label>
+                    <input type="file" id="resume_file" name="resume_file" accept=".pdf" required onchange="updateFileName(this)">
+                </div>
+
+                <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 12.5px; color: #a7f3d0; display: flex; align-items: start; gap: 8px;">
+                    <span>🛡️</span>
+                    <span><strong>Security Guard active:</strong> Phone numbers, email addresses, and names are stripped locally before sending details to Gemini.</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Upload & Match Resume</button>
+            </form>
+
+            {% if latest_score %}
+                <div style="margin-top: 16px; text-align: center;">
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary" style="width: 100%;">Return to Dashboard</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function updateFileName(input) {
+        const textLabel = document.getElementById('file-label-text');
+        if (input.files && input.files.length > 0) {
+            textLabel.textContent = input.files[0].name;
+            textLabel.style.color = "var(--color-accent-secondary)";
+        } else {
+            textLabel.textContent = "Choose PDF Resume";
+            textLabel.style.color = "inherit";
+        }
+    }
+
+    function requestRewrite(sectionText, button) {
+        const card = button.parentElement;
+        const container = card.querySelector('.rewrite-container');
+        const loader = container.querySelector('.loader');
+        const contentDiv = container.querySelector('.suggestion-content');
+
+        // Toggle visibility
+        if (container.style.display === 'block') {
+            container.style.display = 'none';
+            return;
+        }
+
+        container.style.display = 'block';
+        loader.style.display = 'block';
+        contentDiv.innerHTML = '';
+        button.disabled = true;
+
+        fetch("{{ url_for('resume_rewrite') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ section: sectionText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            loader.style.display = 'none';
+            if (data.suggestion) {
+                // Convert simple markdown backticks and bold text to HTML for prettier display
+                let formatted = data.suggestion
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/`([^`]+)`/g, '<code>$1</code>');
+                contentDiv.innerHTML = formatted;
+            } else {
+                contentDiv.textContent = data.error || 'Failed to fetch suggestions.';
+            }
+            button.disabled = false;
+        })
+        .catch(error => {
+            loader.style.display = 'none';
+            contentDiv.textContent = 'Error: ' + error.message;
+            button.disabled = false;
+        });
+    }
+</script>
+{% endblock %}
